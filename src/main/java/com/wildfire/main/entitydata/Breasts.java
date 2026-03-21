@@ -79,7 +79,7 @@ public final class Breasts {
 	 *
 	 * @implNote Negative float values renders the breasts further apart, while positive values renders them closer together
 	 *
-	 * @return  A {@code float} between {@code -1f} and {@code 1f}
+	 * @return  A {@code float} between {@code -10f} and {@code 10f}
 	 */
 	public float getXOffset() {
 		return xOffset;
@@ -97,7 +97,7 @@ public final class Breasts {
 	 *
 	 * @implNote Negative values renders the breasts lower down, while positive values renders them higher up
 	 *
-	 * @return  A {@code float} between {@code -1f} and {@code 1f}
+	 * @return  A {@code float} between {@code -10f} and {@code 10f}
 	 */
 	public float getYOffset() {
 		return yOffset;
@@ -113,7 +113,7 @@ public final class Breasts {
 	/**
 	 * How far back the player's breasts should be rendered, also referred to as Depth in the UI
 	 *
-	 * @return  A {@code float} between {@code 0f} and {@code 1f}
+	 * @return  A {@code float} between {@code -10f} and {@code 0f}
 	 */
 	public float getZOffset() {
 		return zOffset;
@@ -129,7 +129,7 @@ public final class Breasts {
 	/**
 	 * How much rotation outward there should be on each of the player's breasts
 	 *
-	 * @return  A {@code float} between {@code 0f} and {@code 0.1f}
+	 * @return  A {@code float} between {@code 0f} and {@code 1.0f}
 	 */
 	public float getCleavage() {
 		return cleavage;
