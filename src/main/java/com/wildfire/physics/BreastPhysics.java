@@ -43,6 +43,8 @@ import org.jetbrains.annotations.Nullable;
 public class BreastPhysics {
 
 	public static final float TIGHTNESS_REDUCTION_FACTOR = 0.15F;
+	/** Scale factor applied to physics bounds to support 10x larger slider values */
+	public static final float PHYSICS_BOUNDS_SCALE = 10.0F;
 
 	//X-Axis
 	private float bounceVelX = 0, targetBounceX = 0, velocityX = 0, positionX, prePositionX;
@@ -311,18 +313,20 @@ public class BreastPhysics {
 		bounceAmount = Mth.clamp(bounceAmount, 0.15f, 0.6f);
 		float delta = 2.25f - bounceAmount;
 
-		float distanceFromMin = Math.abs(bounceVel + 1.5f) * 0.5f;
-		float distanceFromMax = Math.abs(bounceVel - 2.65f) * 0.5f;
+		// Bounds below are original values scaled by PHYSICS_BOUNDS_SCALE (10x):
+		// -5f = -0.5f * 10, 25f = 2.5f * 10, -15f = -1.5f * 10, 26.5f = 2.65f * 10
+		float distanceFromMin = Math.abs(bounceVel + 15f) * 0.5f;
+		float distanceFromMax = Math.abs(bounceVel - 26.5f) * 0.5f;
 
-		if(bounceVel < -0.5f) {
+		if(bounceVel < -5f) {
 			targetBounceY += distanceFromMin;
 		}
-		if(bounceVel > 2.5f) {
+		if(bounceVel > 25f) {
 			targetBounceY -= distanceFromMax;
 		}
 
-		targetBounceY = Mth.clamp(targetBounceY, -1.5f, 2.5f);
-		targetRotVel = Mth.clamp(targetRotVel, -25f, 25f);
+		targetBounceY = Mth.clamp(targetBounceY, -15f, 25f);
+		targetRotVel = Mth.clamp(targetRotVel, -250f, 250f);
 
 		this.velocity = Mth.lerp(bounceAmount, this.velocity, (this.targetBounceY - this.bounceVel) * delta);
 		this.bounceVel += this.velocity * percent * 1.1625f;
@@ -338,9 +342,9 @@ public class BreastPhysics {
 		this.positionX = this.bounceVelX;
 		this.positionY = this.bounceVel;
 
-		if(this.positionY < -0.5f) this.positionY = -0.5f;
-		if(this.positionY > 1.5f) {
-			this.positionY = 1.5f;
+		if(this.positionY < -5f) this.positionY = -5f;
+		if(this.positionY > 15f) {
+			this.positionY = 15f;
 			this.velocity = 0;
 		}
 	}

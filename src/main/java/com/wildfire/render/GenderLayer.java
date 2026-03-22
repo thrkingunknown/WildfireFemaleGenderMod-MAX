@@ -148,7 +148,7 @@ public class GenderLayer<S extends HumanoidRenderState, M extends HumanoidModel<
 		GenderRenderState.BreastPhysicsState leftPhysicsState = genderState.leftBreastPhysics;
 		final float bSize = leftPhysicsState.getBreastSize();
 		outwardAngle = Math.round(breasts.cleavage * 100f);
-		outwardAngle = Math.min(outwardAngle, 10);
+		outwardAngle = Math.min(outwardAngle, 100);
 
 		resizeBox(genderState, bSize);
 
@@ -244,7 +244,7 @@ public class GenderLayer<S extends HumanoidRenderState, M extends HumanoidModel<
 		}
 
 		rotation = Math.min(rotation, breastSize + 0.2f);
-		rotation = Math.min(rotation, 1); //hard limit for MAX
+		rotation = Math.min(rotation, 10); //hard limit for MAX
 
 		if(isChestplateOccupied) {
 			matrixStack.translate(0, 0, 0.01f);
