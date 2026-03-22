@@ -55,6 +55,10 @@ import java.util.function.Consumer;
 public class GenderLayer<S extends HumanoidRenderState, M extends HumanoidModel<S>> extends RenderLayer<S, M> {
 
 	private static final float DEG_TO_RAD = (float) (Math.PI / 180);
+	/** Maximum X-axis rotation (in breastSize units) before switching to model scaling. ~42° at 1.2. */
+	private static final float ROTATION_CAP_THRESHOLD = 1.2f;
+	/** Scale multiplier applied per unit of breastSize beyond {@link #ROTATION_CAP_THRESHOLD}. */
+	private static final float SCALE_BOOST_MULTIPLIER = 0.4f;
 
 	@UnknownNullability("null until #resizeBox() is first called")
 	private BreastModelBox lBreast, rBreast;
@@ -246,6 +250,13 @@ public class GenderLayer<S extends HumanoidRenderState, M extends HumanoidModel<
 		rotation = Math.min(rotation, breastSize + 0.2f);
 		rotation = Math.min(rotation, 10); //hard limit for MAX
 
+		// Cap rotation to prevent invisible model faces at large breast sizes.
+		// Beyond this cap, the model is scaled instead of rotated further,
+		// so increasing the size slider actually grows the model rather than
+		// rotating it past the point where back/bottom faces become visible.
+		float scaleBoost = Math.max(0f, breastSize - ROTATION_CAP_THRESHOLD);
+		rotation = Math.min(rotation, ROTATION_CAP_THRESHOLD);
+
 		if(isChestplateOccupied) {
 			matrixStack.translate(0, 0, 0.01f);
 		}
@@ -260,6 +271,14 @@ public class GenderLayer<S extends HumanoidRenderState, M extends HumanoidModel<
 		}
 
 		matrixStack.mulPose(rotationTransform);
+
+		// For breast sizes above the rotation cap, scale the model uniformly so
+		// the entire mesh grows larger instead of producing invisible faces.
+		if(scaleBoost > 0f) {
+			float sizeScale = 1.0f + scaleBoost * SCALE_BOOST_MULTIPLIER;
+			matrixStack.scale(sizeScale, sizeScale, sizeScale);
+		}
+
 		matrixStack.scale(0.9995f, 1f, 1f); //z-fighting FIXXX
 	}
 
